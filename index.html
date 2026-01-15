@@ -1,50 +1,98 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Coaching Result</title>
-  <style>
-    body {
-      font-family: Arial;
-      background: #f2f2f2;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .box {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      width: 300px;
-      text-align: center;
-    }
-    input {
-      width: 90%;
-      padding: 8px;
-      margin: 10px 0;
-    }
-    button {
-      padding: 8px 20px;
-      cursor: pointer;
-    }
-    .result {
-      margin-top: 15px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Coaching Result</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 400px;
+  margin: 80px auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+input {
+  width: 90%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+button {
+  width: 95%;
+  padding: 10px;
+  background: #667eea;
+  color: white;
+  border: none;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #5a67d8;
+}
+
+.result-card {
+  margin-top: 20px;
+  text-align: left;
+  background: #f7f7f7;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.pass { color: green; font-weight: bold; }
+.fail { color: red; font-weight: bold; }
+
+.footer {
+  margin-top: 15px;
+  font-size: 12px;
+  color: #777;
+}
+</style>
 </head>
 
 <body>
-  <div class="box">
-    <h2>Check Result</h2>
-    <input type="text" id="roll" placeholder="Enter Roll Number">
-    <button onclick="getResult()">Check</button>
-    <div class="result" id="output"></div>
-  </div>
+
+<div class="container">
+  <h2>Check Your Result</h2>
+
+  <input type="text" id="roll" placeholder="Enter Roll Number">
+  <button onclick="getResult()">Check Result</button>
+
+  <div id="output"></div>
+
+  <div class="footer">Powered by Coaching System</div>
+</div>
 
 <script>
 async function getResult() {
-  const roll = document.getElementById("roll").value;
+  const roll = document.getElementById("roll").value.trim();
   const output = document.getElementById("output");
+
+  if (!roll) {
+    output.innerHTML = "Please enter roll number";
+    return;
+  }
 
   const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT6EtYhb7c6fpWFCaj4dpW9F4LKBFTsyiGogiqaKQ34C2yy9L3YicGjdHxouyq2ygeJX2c11cedAgXg/pub?output=csv";
 
@@ -57,19 +105,23 @@ async function getResult() {
 
     if (cols[0] == roll) {
       output.innerHTML = `
-        <b>Name:</b> ${cols[1]}<br>
-        <b>Class:</b> ${cols[2]}<br>
-        <b>Maths:</b> ${cols[3]}<br>
-        <b>Science:</b> ${cols[4]}<br>
-        <b>English:</b> ${cols[5]}<br>
-        <b>Total:</b> ${cols[6]}<br>
-        <b>Result:</b> ${cols[7]}
+        <div class="result-card">
+          <b>Name:</b> ${cols[1]}<br>
+          <b>Class:</b> ${cols[2]}<br><br>
+          <b>Maths:</b> ${cols[3]}<br>
+          <b>Science:</b> ${cols[4]}<br>
+          <b>English:</b> ${cols[5]}<br><br>
+          <b>Total:</b> ${cols[6]}<br>
+          <b>Result:</b> <span class="${cols[7].toLowerCase()}">${cols[7]}</span>
+        </div>
       `;
       return;
     }
   }
-  output.innerHTML = "Result not found";
+
+  output.innerHTML = "<span class='fail'>Result not found</span>";
 }
 </script>
+
 </body>
 </html>

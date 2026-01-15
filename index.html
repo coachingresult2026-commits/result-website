@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Coaching Result</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+      text-align: center;
+    }
+    input {
+      width: 90%;
+      padding: 8px;
+      margin: 10px 0;
+    }
+    button {
+      padding: 8px 20px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box">
+    <h2>Check Result</h2>
+    <input type="text" id="roll" placeholder="Enter Roll Number">
+    <button onclick="getResult()">Check</button>
+    <div class="result" id="output"></div>
+  </div>
+
+<script>
+async function getResult() {
+  const roll = document.getElementById("roll").value;
+  const output = document.getElementById("output");
+
+  const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT6EtYhb7c6fpWFCaj4dpW9F4LKBFTsyiGogiqaKQ34C2yy9L3YicGjdHxouyq2ygeJX2c11cedAgXg/pub?output=csv";
+
+  const res = await fetch(sheetURL);
+  const text = await res.text();
+  const rows = text.split("\n");
+
+  for (let i = 1; i < rows.length; i++) {
+    const cols = rows[i].split(",");
+
+    if (cols[0] == roll) {
+      output.innerHTML = `
+        <b>Name:</b> ${cols[1]}<br>
+        <b>Class:</b> ${cols[2]}<br>
+        <b>Maths:</b> ${cols[3]}<br>
+        <b>Science:</b> ${cols[4]}<br>
+        <b>English:</b> ${cols[5]}<br>
+        <b>Total:</b> ${cols[6]}<br>
+        <b>Result:</b> ${cols[7]}
+      `;
+      return;
+    }
+  }
+  output.innerHTML = "Result not found";
+}
+</script>
+</body>
+</html>
